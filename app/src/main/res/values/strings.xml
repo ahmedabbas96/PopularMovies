@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PopularMovies</string>
+    <string name="most_popular">Most popular</string>
+    <string name="highest_rated">Highest rated</string>
+    <string name="release_date">Release date</string>
+    <string name="plot_synopsis">Plot synopsis</string>
+    <string name="vote_average">Vote average</string>
+    <string name="detail_error_message">Error</string>
+    <string name="ooops">Ooops!</string>
+    <string name="NoInternet">Slow or no internet connection \nCheck your internet settings.</string>
+    <string name="try_again">Try Again</string>
 </resources>
