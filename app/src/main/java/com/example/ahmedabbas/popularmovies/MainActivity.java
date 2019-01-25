@@ -6,17 +6,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.ImageView;
+import android.widget.GridView;
 import android.widget.TextView;
 
 
 import com.example.ahmedabbas.popularmovies.model.Movies;
+import com.example.ahmedabbas.popularmovies.utils.GridAdapter;
 import com.example.ahmedabbas.popularmovies.utils.HttpHelper;
 import com.example.ahmedabbas.popularmovies.utils.InternetCheck;
 import com.example.ahmedabbas.popularmovies.utils.JsonUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -28,15 +28,12 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Movies> moviesArray;
 
-     public static boolean internet;
-
-    ImageView Poster1, Poster2, Poster3, Poster4;
-
     TextView opsTv, noInternetTv;
 
     Button retryBtn;
 
-    GridLayout gridLayout;
+    GridView gridView;
+    GridAdapter gridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +41,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // link the layout
-        gridLayout = findViewById(R.id.grid_layout);
+        gridView = findViewById(R.id.grid_view);
         opsTv = findViewById(R.id.ops_tv);
         noInternetTv = findViewById(R.id.no_internet_message_tv);
         retryBtn = findViewById(R.id.retry_btn);
-        Poster1 = findViewById(R.id.posterIV1);
-        Poster2 = findViewById(R.id.posterIV2);
-        Poster3 = findViewById(R.id.posterIV3);
-        Poster4 = findViewById(R.id.posterIV4);
 
         // Check internet
         InternetCheck();
@@ -64,31 +57,11 @@ public class MainActivity extends AppCompatActivity {
             moviesArray = savedInstanceState.getParcelableArrayList("movies");
         }
 
-        Poster1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LaunchDetailedActivity(moviesArray.get(0));
-            }
-        });
 
-        Poster2.setOnClickListener(new View.OnClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                LaunchDetailedActivity(moviesArray.get(1));
-            }
-        });
-
-        Poster3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LaunchDetailedActivity(moviesArray.get(2));
-            }
-        });
-
-        Poster4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LaunchDetailedActivity(moviesArray.get(3));
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LaunchDetailedActivity(moviesArray.get(position));
             }
         });
 
@@ -121,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public void processFinish(Boolean state) {
                 if(!state){
 
-                    gridLayout.setVisibility(View.GONE);
+                    gridView.setVisibility(View.GONE);
 
                     opsTv.setVisibility(View.VISIBLE);
                     noInternetTv.setVisibility(View.VISIBLE);
@@ -132,13 +105,15 @@ public class MainActivity extends AppCompatActivity {
                     noInternetTv.setVisibility(View.GONE);
                     retryBtn.setVisibility(View.GONE);
 
-                    gridLayout.setVisibility(View.VISIBLE);
+                    gridView.setVisibility(View.VISIBLE);
 
                 }
 
             }
         }).execute();
     }
+
+
 
     private void LaunchDetailedActivity(Movies movies){
         Intent intent = new Intent(this,DetailedActivity.class);
@@ -154,10 +129,8 @@ public class MainActivity extends AppCompatActivity {
 
                 moviesArray = JsonUtils.parseMoviesJson(output);
 
-                Picasso.with(MainActivity.this).load(makePosterUrl(moviesArray.get(0).getPosterPath())).into(Poster1);
-                Picasso.with(MainActivity.this).load(makePosterUrl(moviesArray.get(1).getPosterPath())).into(Poster2);
-                Picasso.with(MainActivity.this).load(makePosterUrl(moviesArray.get(2).getPosterPath())).into(Poster3);
-                Picasso.with(MainActivity.this).load(makePosterUrl(moviesArray.get(3).getPosterPath())).into(Poster4);
+                gridAdapter = new GridAdapter(MainActivity.this,moviesArray);
+                gridView.setAdapter(gridAdapter);
 
 
             }

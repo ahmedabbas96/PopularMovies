@@ -2,7 +2,6 @@ package com.example.ahmedabbas.popularmovies.utils;
 
 import android.os.AsyncTask;
 
-import com.example.ahmedabbas.popularmovies.MainActivity;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -37,6 +36,5 @@ public class InternetCheck extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean internet) {
 
         internetState.processFinish(internet);
-        MainActivity.internet = internet;
     }
 }

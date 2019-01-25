@@ -1,6 +1,7 @@
 package com.example.ahmedabbas.popularmovies.utils;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -41,7 +42,6 @@ public class HttpHelper extends AsyncTask <String, Void, String>{
             while ((line = bufferedReader.readLine()) != null){
                 stringBuilder.append(line).append('\n');
             }
-
             return stringBuilder.toString();
 
 

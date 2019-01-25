@@ -11,12 +11,6 @@ public class Movies implements Parcelable {
     private String voteAverage;
     private String overview;
 
-    //default constructor
-    public Movies(){}
-
-    public Movies(String posterPath){
-        this.posterPath = posterPath;
-    }
 
     public Movies(String posterPath, String title, String releaseDate, String voteAverage, String overview ){
 

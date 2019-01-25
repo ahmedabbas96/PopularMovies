@@ -1,6 +1,8 @@
 package com.example.ahmedabbas.popularmovies.utils;
 
 
+import android.util.Log;
+
 import com.example.ahmedabbas.popularmovies.model.Movies;
 
 import org.json.JSONArray;
@@ -37,7 +39,6 @@ public class JsonUtils {
                     String plotSynopsis = movieJsonObject.getString(PLOT_SYNOPSIS_KEY);
 
                     Movies movie = new Movies(posterPath,movieTitle,releaseDate,voteAverage,plotSynopsis);
-
                     moviesArray.add(movie);
 
                 }
