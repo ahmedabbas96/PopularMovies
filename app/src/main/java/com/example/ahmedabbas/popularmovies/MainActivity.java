@@ -32,7 +32,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String apiKey ="9d449e9088f02ba932a6e9597c5c94dc";
+    public static final String apiKey ="";
     private final String mostPopularUrl="https://api.themoviedb.org/3/movie/popular?api_key="+apiKey;
     private final String highestRatedUrl="https://api.themoviedb.org/3/movie/top_rated?api_key="+apiKey;
 
