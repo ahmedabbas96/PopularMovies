@@ -9,4 +9,9 @@
     <string name="ooops">Ooops!</string>
     <string name="NoInternet">Slow or no internet connection \nCheck your internet settings.</string>
     <string name="try_again">Try Again</string>
+    <string name="trailer">Trailers</string>
+    <string name="trailer_one">Trailer one</string>
+    <string name="trailer_two">Trailer two</string>
+    <string name="favorite">Favorite</string>
+    <string name="you_have_no_favorite_movies">You have no favorite movies</string>
 </resources>

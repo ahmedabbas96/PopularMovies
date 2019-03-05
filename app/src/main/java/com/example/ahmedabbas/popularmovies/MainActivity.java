@@ -1,7 +1,7 @@
 package com.example.ahmedabbas.popularmovies;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,27 +13,43 @@ import android.widget.TextView;
 
 
 import com.example.ahmedabbas.popularmovies.model.Movies;
+import com.example.ahmedabbas.popularmovies.utils.AppDataBase;
 import com.example.ahmedabbas.popularmovies.utils.GridAdapter;
 import com.example.ahmedabbas.popularmovies.utils.HttpHelper;
 import com.example.ahmedabbas.popularmovies.utils.InternetCheck;
 import com.example.ahmedabbas.popularmovies.utils.JsonUtils;
+import com.example.ahmedabbas.popularmovies.utils.MainViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String mostPopularUrl="https://api.themoviedb.org/3/movie/popular?api_key=";
-    private final String highestRatedUrl="https://api.themoviedb.org/3/movie/top_rated?api_key=";
+    public static final String apiKey ="9d449e9088f02ba932a6e9597c5c94dc";
+    private final String mostPopularUrl="https://api.themoviedb.org/3/movie/popular?api_key="+apiKey;
+    private final String highestRatedUrl="https://api.themoviedb.org/3/movie/top_rated?api_key="+apiKey;
 
     private ArrayList<Movies> moviesArray;
 
-    TextView opsTv, noInternetTv;
+    private LiveData<List<Movies>> favoriteMovies;
+
+    TextView opsTv, noInternetTv, nofav;
 
     Button retryBtn;
 
     GridView gridView;
     GridAdapter gridAdapter;
+
+    private AppDataBase mDb;
+
+    boolean isFavoritePressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         opsTv = findViewById(R.id.ops_tv);
         noInternetTv = findViewById(R.id.no_internet_message_tv);
         retryBtn = findViewById(R.id.retry_btn);
+        nofav = findViewById(R.id.no_fav_message_tv);
 
         // Check internet
         InternetCheck();
@@ -60,8 +77,20 @@ public class MainActivity extends AppCompatActivity {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LaunchDetailedActivity(moviesArray.get(position));
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                if(isFavoritePressed){
+                    isFavoritePressed = false;
+                    favoriteMovies.observe(MainActivity.this, new Observer<List<Movies>>() {
+                        @Override
+                        public void onChanged(List<Movies> movies) {
+                            LaunchDetailedActivity(movies.get(position));
+                        }
+                    });
+                }else {
+                    LaunchDetailedActivity(moviesArray.get(position));
+                }
+
             }
         });
 
@@ -72,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 InternetCheck();
             }
         });
+
+        mDb = AppDataBase.getInstance(getApplicationContext());
 
     }
 
@@ -165,6 +196,29 @@ public class MainActivity extends AppCompatActivity {
         else if(id == R.id.highest_rated_item){
 
             populateUI(highestRatedUrl);
+
+        }
+        else if(id == R.id.favorite_item){
+
+            isFavoritePressed = true;
+
+            MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+            viewModel.getFavorite().observe(this, new Observer<List<Movies>>() {
+                @Override
+                public void onChanged(List<Movies> movies) {
+
+                    if(movies.size() == 0){
+
+                        gridView.setVisibility(View.GONE);
+                        nofav.setVisibility(View.VISIBLE);
+
+                    }else {
+                        gridView.setVisibility(View.VISIBLE);
+                        gridAdapter = new GridAdapter(MainActivity.this, (ArrayList<Movies>) movies);
+                        gridView.setAdapter(gridAdapter);
+                    }
+                }
+            });
 
         }
         return super.onOptionsItemSelected(item);
