@@ -23,10 +23,8 @@ import com.example.ahmedabbas.popularmovies.utils.MainViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 
